@@ -2,9 +2,9 @@ const {pushNotification} = require('../services/notification.service')
 
 async function sendNotification(req, res){
 
-    const {to, title, body, time} = req.body
+    const {to, title, body} = req.body
 
-    if(!to || !title || !body || !time){
+    if(!to || !title || !body){
         return res.status(400).json({
             message: "Missing required fields",
             status: false
@@ -13,7 +13,7 @@ async function sendNotification(req, res){
 
     try{
         
-        const result = await pushNotification(to, title, body, time)
+        const result = await pushNotification(to, title, body)
         res.status(200).json(result)
 
     }catch(err){

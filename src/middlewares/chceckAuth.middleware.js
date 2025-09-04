@@ -73,7 +73,7 @@ async function checkAuth(req, res, next) {
       notification_token
     );
 
-    console.log("Token check result:", tokenRes);
+    // console.log("Token check result:", tokenRes);
 
     if (tokenRes) {
       return next();

@@ -6,7 +6,7 @@ const notificationRoutes = require("./routes/notification.route");
 const app = express();
 
 app.use(bodyParser.json());
-
+app.use(express.urlencoded({ extended: true }));
 // routes
 app.use("/api", notificationRoutes);
 
