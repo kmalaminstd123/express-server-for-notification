@@ -1,4 +1,6 @@
 const {expoPushNotificationUrl} = require("../config/app.config")
+const {db} = require("../config/database.config")
+
 
 async function pushNotification(to, title, body){
     const message = {
@@ -24,6 +26,72 @@ async function pushNotification(to, title, body){
     }
 }
 
+function saveNotificationToDatabase(title, body, user_id){
+    
+    return new Promise((resolve, reject) => {
+        
+        const insertDataToDatabase = `INSERT INTO notification (title, body, user_id) VALUES (?, ?, ?)`
+        
+        db.query(insertDataToDatabase, [title, body, user_id], (err, result) => {
+            if(err){
+                console.error("DB Insert Error:", err);
+                return reject({
+                    message: "Failed to insert data on database",
+                    status: false
+                })
+            }
+            return resolve({
+                message: "Data inserted on database",
+                status: true
+            })
+               
+        })
+        
+    })
+    
+    
+     
+}
+
+
+
+function getUserAllNotificationsFromDatabase(user_id) {
+    
+    // return {
+    //     name: "alamin",
+    //     user_id
+    // }
+    
+    return new Promise((resolve, reject) => {
+        const getNotificationQuery = 'SELECT * FROM notification WHERE user_id = ?';
+        db.query(getNotificationQuery, [user_id], (err, result) => {
+            if (err) {
+                console.error("DB query error:", err); // log full MySQL error
+                return reject({
+                    message: "Failed to get data from database",
+                    status: false,
+                    error: {
+                        code: err.code,
+                        errno: err.errno,
+                        sqlMessage: err.sqlMessage,
+                        sqlState: err.sqlState
+                    }
+                });
+            }
+            // Resolve with actual data
+            return resolve({
+                message: result,
+                status: true
+            });
+        });
+    });
+    
+}
+
+
+
 module.exports = {
-    pushNotification
+    pushNotification,
+    saveNotificationToDatabase,
+    getUserAllNotificationsFromDatabase
 }
